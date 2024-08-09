@@ -6,8 +6,6 @@ from PIL import Image
 from docx import Document
 import easyocr
 
-# Especificar la ruta completa al ejecutable de Tesseract
-pytesseract.pytesseract.tesseract_cmd = r'D:/TESSERACT/tesseract.exe'
 
 # Ruta a la carpeta que contiene las imágenes
 folder_path = 'C:/Users/hp/Desktop/CAPS_TRADUS'
