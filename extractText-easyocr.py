@@ -70,5 +70,8 @@ for filename in files:
 # Eliminar la imagen temporal
 os.remove(preprocessed_image_path)
 
+# Especificar la ruta completa donde se guardará el documento
+output_path = 'C:/Users/hp/Desktop/TEXTO.docx'
+
 # Guardar el documento
-doc.save('TEXTO.docx')
+doc.save(output_path)
