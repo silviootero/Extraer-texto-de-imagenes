@@ -4,6 +4,9 @@ from PIL import Image
 import pytesseract
 from docx import Document
 import os
+from spellchecker import SpellChecker
+import re
+
 
 # Especificar la ruta completa al ejecutable de Tesseract
 pytesseract.pytesseract.tesseract_cmd = r'D:/TESSERACT/tesseract.exe'
@@ -46,6 +49,9 @@ for filename in files:
 
     # Inicializar una variable para almacenar el párrafo actual
     current_paragraph = []
+    
+    #inicializar el spellchecker
+    spell = SpellChecker()
 
     for line in lines:
         # Si la línea no está vacía, se añade al párrafo actual
@@ -53,12 +59,28 @@ for filename in files:
             current_paragraph.append(line.strip())
         # Si la línea está vacía y hay contenido en current_paragraph, añadirlo al documento
         elif current_paragraph:
-            doc.add_paragraph(" ".join(current_paragraph))
+            # Unir las líneas en un solo párrafo
+            paragraph_text = " ".join(current_paragraph)
+        
+            # Procesar el párrafo para correcciones ortográficas
+            corrected_paragraph = re.sub(r'\d', '', paragraph_text)
+            corrected_paragraph2 = " ".join([spell.correction(word) if spell.correction(word) else word for word in corrected_paragraph.split()])
+
+        
+        
+            # Añadir el párrafo corregido al documento
+            doc.add_paragraph(corrected_paragraph2)
+        
+            # Limpiar el current_paragraph para el siguiente bloque
             current_paragraph = []
 
-    # Añadir el último párrafo si existe
-    if current_paragraph:
-        doc.add_paragraph(" ".join(current_paragraph))
+# Añadir el último párrafo si existe
+if current_paragraph:
+    paragraph_text = " ".join(current_paragraph)
+    corrected_paragraph = re.sub(r'\d', '', paragraph_text)
+    corrected_paragraph2 = " ".join([spell.correction(word) if spell.correction(word) else word for word in corrected_paragraph.split()])
+
+    doc.add_paragraph(corrected_paragraph2)
 
 # Eliminar la imagen temporal
 os.remove(preprocessed_image_path)
